@@ -1,0 +1,86 @@
+{
+  "project_info": {
+    "project_number": "51802883744",
+    "firebase_url": "https://litrary-5e662.firebaseio.com",
+    "project_id": "litrary-5e662",
+    "storage_bucket": "litrary-5e662.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:51802883744:android:c71c8ec5b1674eb8",
+        "android_client_info": {
+          "package_name": "build.gradle"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "51802883744-pugkr4jn2qan9tt7juug9gseg9l22j6u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBuYg83gwjjcgw8KHLWgwWh5opN97I0nOk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:51802883744:android:1a1048cf5d1762bd",
+        "android_client_info": {
+          "package_name": "com.choprarohan.litrary"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "51802883744-kt8dvet77mal9d4bv2b4qs0udgkonpjs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.choprarohan.litrary",
+            "certificate_hash": "a55edd3370a795c5acbbc0bad30b93d7aee42252"
+          }
+        },
+        {
+          "client_id": "51802883744-pugkr4jn2qan9tt7juug9gseg9l22j6u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBuYg83gwjjcgw8KHLWgwWh5opN97I0nOk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "51802883744-pugkr4jn2qan9tt7juug9gseg9l22j6u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
