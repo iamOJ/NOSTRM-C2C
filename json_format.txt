@@ -1,0 +1,37 @@
+{
+	"blocks":
+		[
+			####BLOCK 1
+			{
+				"index":"xx",
+				"prev_hash":"yy",
+				"timestamp":"10",
+				"data":
+					{
+						"proof_of_work" : 10,
+						"transactions":
+						[
+							{"to":"t" , "amount":10 , "from":"f"},
+							{"to":"t" , "amount":10 , "from":"f"}
+						]
+					}
+			},
+
+			####BLOCK 2
+			{
+				"index":"xx",
+				"prev_hash":"yy",
+				"timestamp":"10",
+				"data":
+					{
+						"proof_of_work" : 10,
+						"transactions":
+						[
+							{"to":"t" , "amount":10 , "from":"f"},
+							{"to":"t" , "amount":10 , "from":"f"}
+						]
+					},
+			},
+
+		]
+}
