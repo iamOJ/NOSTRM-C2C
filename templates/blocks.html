@@ -18,10 +18,10 @@ div {
 	{% for block in chain %}
 		<div>
 		<h2> Block Height: {{ block['index'] }} </h2>
-		<h3> Timestamp:{{ block['timestamp'] }} </h3>
-		<h3> Previous Hash: {{ block['hash'] }} </h3>
-		<br><br>
-		<code> {{ block['data'] }} </code>
+		<h3> Timestamp: </h3>{{ block['timestamp'] }}
+		<h3> Hash of previous block:</h3> {{ block['hash'] }}
+		<h3>Transaction 1: </h3> {{ block['trans1']}}
+		<h3>Transaction 2: </h3> {{ block['trans2']}}
 		</div>
 	{% endfor %}
 </body>

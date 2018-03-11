@@ -99,8 +99,8 @@ def transaction():
 
 @node.route('/req', methods=['GET'])
 def pp():
-	aa = "sample"
-	return render_template('main.html', a=aa)
+  aa = "sample"
+  return render_template('main.html', a=aa)
 
 @node.route('/blocks', methods=['GET'])
 def get_blocks():
@@ -113,24 +113,24 @@ def get_blocks():
     block_timestamp = str(block.timestamp)
 
     if(i==0):
-    	trans0 = "None"
-    	trans1 = "None"
-    	block_hash = "None"
+      trans0 = "None"
+      trans1 = "None"
+      block_hash = "None"
     else:
-	    block_transaction = block.data["transactions"]
-	    block_from0 = block_transaction[0]["from"]
-	    block_to0 = block_transaction[0]["to"]
-	    block_amount0 = block_transaction[0]["amount"]
+      block_transaction = block.data["transactions"]
+      block_from0 = block_transaction[0]["from"]
+      block_to0 = block_transaction[0]["to"]
+      block_amount0 = block_transaction[0]["amount"]
 
-	    block_from1 = block_transaction[1]["from"]
-	    block_to1 = block_transaction[1]["to"]
-	    block_amount1 = block_transaction[1]["amount"]
+      block_from1 = block_transaction[1]["from"]
+      block_to1 = block_transaction[1]["to"]
+      block_amount1 = block_transaction[1]["amount"]
 
-	    trans0 = "FROM=" + block_from0 + ";   TO=" + block_to0 + ";   AMOUNT=" + str(block_amount0)
-	    trans1 = "FROM=" + block_from1 + ";   TO=" + block_to1 + ";   AMOUNT=" + str(block_amount1)
-	    
-	    block_hash = block.hash
-	    
+      trans0 = "FROM=" + block_from0 + ";   TO=" + block_to0 + ";   AMOUNT=" + str(block_amount0)
+      trans1 = "FROM=" + block_from1 + ";   TO=" + block_to1 + ";   AMOUNT=" + str(block_amount1)
+      
+      block_hash = block.hash
+      
     chain_to_send[i] = {
       "index": block_index,
       "timestamp": block_timestamp,
@@ -154,15 +154,15 @@ def get_jsonn_blocks():
     #block_hash = block.hash
     #data = json.loads(json.dumps(block_data))
     block_json = {
-        "index": str(block.index),
-	    "timestamp": str(block.timestamp),
-	    "data": json.loads(json.dumps(block.data)),
-	    "prev_hash": block.hash
+      "index": str(block.index),
+      "timestamp": str(block.timestamp),
+      "data": block.data,#json.loads(json.dumps(block.data)),
+      "prev_hash": block.hash
     }
-    child_list.append(json.dumps(block_json))
+    child_list.append(block_json)
 
   parent_json = {
-  	"blocks" : child_list
+    "blocks" : child_list
   }
   print(type(parent_json))
   to_send = json.dumps(parent_json)
@@ -181,4 +181,4 @@ def gui():
     return None
 
 if __name__ == '__main__':
-    node.run(debug=True, host='0.0.0.0', port=3000)
+    node.run(debug=True, host='0.0.0.0', port=3300)
