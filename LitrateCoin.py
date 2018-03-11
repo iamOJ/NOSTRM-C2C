@@ -5,6 +5,7 @@ import requests
 import hashlib as hasher
 import datetime as date
 import copy
+
 node = Flask(__name__)
 
 class Block:
@@ -26,10 +27,10 @@ def mine():
   last_proof = last_block.data['proof-of-work']
   proof = proof_of_work(last_proof)
   this_nodes_transactions.append(
-    { "from": "network", "to": miner_address, "amount": 1 }
+    { "from":"network" , "to":miner_address , "amount":1 }
   )
   new_block_data = {
-    "proof-of-work": proof,
+    "proof-of-work": str(proof),
     "transactions": list(this_nodes_transactions)
   }
   new_block_index = last_block.index + 1
@@ -47,8 +48,6 @@ def mine():
   block = {"index": new_block_index, "timestamp": str(new_block_timestamp), "data": new_block_data, "hash": last_block_hash}
 
   return render_template('mine.html', block=block)
-  
-
 
 def create_genesis_block():
   return Block(0, date.datetime.now(), {
@@ -94,32 +93,82 @@ def transaction():
   blockchain.append(mined_block)
   
   block = {"index": new_block_index, "timestamp": str(new_block_timestamp), "data": new_block_data, "hash": last_block_hash}
-  print(block)
+  #print(block)
   
   return 'Transaction Successful'
 
-@node.route('/req', methods=['POST'])
+@node.route('/req', methods=['GET'])
 def pp():
-    return render_template('main.html', a=aa)
+	aa = "sample"
+	return render_template('main.html', a=aa)
 
 @node.route('/blocks', methods=['GET'])
 def get_blocks():
+  parent_json = {}
   chain_to_send = copy.copy(blockchain)
-  for i in range(len(chain_to_send)):
+  for i in range(0,len(chain_to_send)):
     block = chain_to_send[i]
+
     block_index = str(block.index)
     block_timestamp = str(block.timestamp)
-    block_data = str(block.data)
-    block_hash = block.hash
-    data = json.loads(json.dumps(block_data))
+
+    if(i==0):
+    	trans0 = "None"
+    	trans1 = "None"
+    	block_hash = "None"
+    else:
+	    block_transaction = block.data["transactions"]
+	    block_from0 = block_transaction[0]["from"]
+	    block_to0 = block_transaction[0]["to"]
+	    block_amount0 = block_transaction[0]["amount"]
+
+	    block_from1 = block_transaction[1]["from"]
+	    block_to1 = block_transaction[1]["to"]
+	    block_amount1 = block_transaction[1]["amount"]
+
+	    trans0 = "FROM=" + block_from0 + ";   TO=" + block_to0 + ";   AMOUNT=" + str(block_amount0)
+	    trans1 = "FROM=" + block_from1 + ";   TO=" + block_to1 + ";   AMOUNT=" + str(block_amount1)
+	    
+	    block_hash = block.hash
+	    
     chain_to_send[i] = {
       "index": block_index,
       "timestamp": block_timestamp,
-      "data": data,
+      "trans1": trans0,
+      "trans2": trans1,
       "hash": block_hash
     }
+
   return render_template('blocks.html', chain=chain_to_send)
 
+@node.route('/jsonn', methods=['GET'])
+def get_jsonn_blocks():
+  child_list=[]
+  chain_to_send = copy.copy(blockchain)
+
+  for i in range(0,len(chain_to_send)):
+    block = chain_to_send[i]
+    #block_index = str(block.index)
+    #block_timestamp = str(block.timestamp)
+    #block_data = str(block.data)
+    #block_hash = block.hash
+    #data = json.loads(json.dumps(block_data))
+    block_json = {
+        "index": str(block.index),
+	    "timestamp": str(block.timestamp),
+	    "data": json.loads(json.dumps(block.data)),
+	    "prev_hash": block.hash
+    }
+    child_list.append(json.dumps(block_json))
+
+  parent_json = {
+  	"blocks" : child_list
+  }
+  print(type(parent_json))
+  to_send = json.dumps(parent_json)
+  #print(to_send)
+  #return render_template('jsonn.html', chain=to_send)
+  return to_send
 
 def proof_of_work(last_proof):
   incrementor = last_proof + 1
@@ -132,5 +181,4 @@ def gui():
     return None
 
 if __name__ == '__main__':
-    node.run(debug=True, host='0.0.0.0')
-
+    node.run(debug=True, host='0.0.0.0', port=3000)
