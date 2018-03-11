@@ -5,10 +5,12 @@ import requests
 import hashlib as hasher
 import datetime
 import copy
+import time
 
 node = Flask(__name__)
 status = False
 NUM_ZEROS = 4
+time_miner1 = 0
 
 class Block:
   def __init__(self, index, timestamp, data, previous_hash):
@@ -66,6 +68,7 @@ mining = True
 
 @node.route('/txion', methods=['POST'])
 def transaction():
+  global time_miner1
   new_txion = request.get_json()
   print(new_txion)
   this_nodes_transactions.append(new_txion)
@@ -76,9 +79,11 @@ def transaction():
   last_block = blockchain[len(blockchain) - 1]
   #last_proof = last_block.data['proof-of-work']
   proof = mine(new_txion)
-  this_nodes_transactions.append(
-    { "from": "network", "to": miner_address, "amount": 1 }
-  )
+
+  time_miner1 = time.time()
+
+  this_nodes_transactions.append({ "from": "network", "to": miner_address, "amount": 1 })
+
   new_block_data = {
     "proof-of-work": proof,
     "transactions": list(this_nodes_transactions)
@@ -96,14 +101,28 @@ def transaction():
   blockchain.append(mined_block)
   
   block = {"index": new_block_index, "timestamp": str(new_block_timestamp), "data": new_block_data, "hash": last_block_hash}
-  #print(blocblockk)
-  
   return 'Transaction Successful'
+  
+@node.route('/proof', methods = ['POST'])
+def get_proof():
+  global time_miner1
+  new_proof = request.get_json()
+  to_send = json.dumps(new_proof)
+  #this_nodes_transactions.append(new_txion)
+  print(new_proof)
+  time_miner2 = float(new_proof["timestamp"])
+  if(time_miner1 < time_miner2):
+    print("\nMINER 1 WINS\n")
+  else:
+    print("\nMINER 2 WINS\n")
+  return to_send
 
+"""
 @node.route('/req', methods=['GET'])
 def pp():
   status = True
   return render_template('main.html', a=status)
+"""
 
 @node.route('/blocks', methods=['GET'])
 def get_blocks():
@@ -146,13 +165,6 @@ def get_blocks():
     }
 
   return render_template('blocks.html', chain=chain_to_send)
-
-@node.route('/proof', methods = ['GET'])
-def get_proof():
-  new_proof = request.get_json()
-  #this_nodes_transactions.append(new_txion)
-  print(new_proof)
-  return new_proof
 
 @node.route('/jsonn', methods=['GET'])
 def get_jsonn_blocks():
