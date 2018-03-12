@@ -11,14 +11,16 @@ node = Flask(__name__)
 status = False
 NUM_ZEROS = 4
 time_miner1 = 0
+proof_miner1 = 0
 
 class Block:
-  def __init__(self, index, timestamp, data, previous_hash):
+  def __init__(self, index, timestamp, data, self_hash, previous_hash):
     self.index = index
     self.timestamp = timestamp
     self.data = data
+    self.hash = self_hash
     self.previous_hash = previous_hash
-    self.hash = self.hash_block()
+    #self.hash = self.hash_block()
   
   def hash_block(self):
     sha = hasher.sha256()
@@ -57,9 +59,8 @@ def create_genesis_block():
   return Block(0, datetime.datetime.now(), {
     "proof-of-work": 9,
     "transactions": None
-  }, "0")
+  }, 0, 0)
 
-miner_address = "q3nf394hjg-random-miner-address-34nf3i4nflkn3oi"
 blockchain = []
 blockchain.append(create_genesis_block())
 this_nodes_transactions = []
@@ -68,20 +69,20 @@ mining = True
 
 @node.route('/txion', methods=['POST'])
 def transaction():
-  global time_miner1
+  global time_miner1, proof
   new_txion = request.get_json()
   print(new_txion)
-  this_nodes_transactions.append(new_txion)
   print "New transaction"
   print "FROM: {}".format(new_txion['from'].encode('ascii','replace'))
   print "TO: {}".format(new_txion['to'].encode('ascii','replace'))
   print "AMOUNT: {}\n".format(new_txion['amount'])
-  last_block = blockchain[len(blockchain) - 1]
   #last_proof = last_block.data['proof-of-work']
-  proof = mine(new_txion)
+  proof_miner1 = mine(new_txion)
 
   time_miner1 = time.time()
 
+  """
+  last_block = blockchain[len(blockchain) - 1]
   this_nodes_transactions.append({ "from": "network", "to": miner_address, "amount": 1 })
 
   new_block_data = {
@@ -91,7 +92,7 @@ def transaction():
   new_block_index = last_block.index + 1
   new_block_timestamp = this_timestamp = datetime.datetime.now()
   last_block_hash = last_block.hash
-  this_nodes_transactions[:] = []
+  
   mined_block = Block(
     new_block_index,
     new_block_timestamp,
@@ -101,20 +102,56 @@ def transaction():
   blockchain.append(mined_block)
   
   block = {"index": new_block_index, "timestamp": str(new_block_timestamp), "data": new_block_data, "hash": last_block_hash}
+  """
   return 'Transaction Successful'
   
 @node.route('/proof', methods = ['POST'])
 def get_proof():
-  global time_miner1
+  global time_miner1, proof_miner1
   new_proof = request.get_json()
   to_send = json.dumps(new_proof)
   #this_nodes_transactions.append(new_txion)
   print(new_proof)
+  proof_miner2 = new_proof["proof_of_work"]
   time_miner2 = float(new_proof["timestamp"])
+
   if(time_miner1 < time_miner2):
     print("\nMINER 1 WINS\n")
+    miner_address = "Miner 1"
+    block_timestamp = time_miner1
+    block_proof_of_work = proof_miner1
   else:
     print("\nMINER 2 WINS\n")
+    miner_address = "Miner 2"
+    block_timestamp = time_miner2
+    block_proof_of_work = proof_miner2
+  
+  last_block = blockchain[len(blockchain) - 1]
+  
+  block_from = new_proof["from"]
+  block_to = new_proof["to"]
+  block_amount = new_proof["amount"]
+  block_hash = new_proof["hash"]
+  block_index = last_block.index + 1
+  block_proof_of_work = new_proof["proof_of_work"]
+
+  this_nodes_transactions.append({"from":block_from, "to":block_to, "amount":block_amount})
+  this_nodes_transactions.append({"from":"ledger", "to": miner_address, "amount": 1 })  
+
+  block_data = {"proof-of-work": block_proof_of_work, "transactions": list(this_nodes_transactions)}
+  this_nodes_transactions[:] = []
+  last_block_hash = last_block.hash
+
+  mined_block = Block(
+    block_index,
+    block_timestamp,
+    block_data,
+    block_hash,
+    last_block_hash
+  )
+
+  blockchain.append(mined_block)
+
   return to_send
 
 """
