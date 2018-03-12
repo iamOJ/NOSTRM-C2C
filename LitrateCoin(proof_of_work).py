@@ -1,3 +1,4 @@
+#proof_of_work
 from flask import Flask, render_template
 from flask import request
 import json
