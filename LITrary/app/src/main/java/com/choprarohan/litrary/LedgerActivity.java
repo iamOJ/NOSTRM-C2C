@@ -103,6 +103,7 @@ public class LedgerActivity extends AppCompatActivity {
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+        check();
 
         sf.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -119,6 +120,7 @@ public class LedgerActivity extends AppCompatActivity {
     public void check(){
         if(!sf.isRefreshing())
             sf.setRefreshing(true);
+
 
         url = "http://192.168.43.24:3400/jsonn";
         Log.i("url",url);

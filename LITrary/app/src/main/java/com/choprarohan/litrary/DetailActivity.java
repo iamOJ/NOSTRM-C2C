@@ -121,7 +121,7 @@ public class DetailActivity extends AppCompatActivity {
                                 conn.setRequestProperty("Content-Type", "application/json");
 
 
-                                String input = "{\"from\": \"2\", \"to\":\"1\", \"amount\": "+credits+"}";
+                                String input = "{\"from\": \""+title+"\", \"to\":\"1\", \"amount\": "+credits+"}";
                                 OutputStream os = conn.getOutputStream();
 
 
@@ -162,14 +162,14 @@ public class DetailActivity extends AppCompatActivity {
                     public void run() {
                         try {
 
-                            URL url2 = new URL("http://192.168.43.24:4400/txion");
+                            URL url2 = new URL("http://192.168.43.8:4400/txion");
                             HttpURLConnection conn2 = (HttpURLConnection) url2.openConnection();
                             conn2.setDoOutput(true);
                             conn2.setRequestMethod("POST");
                             conn2.setRequestProperty("Content-Type", "application/json");
 
 
-                            String input2 = "{\"from\": \"2\", \"to\":\"1\", \"amount\": "+credits+"}";
+                            String input2 = "{\"from\": \""+ title +"\", \"to\":\"1\", \"amount\": "+credits+"}";
                             OutputStream os2 = conn2.getOutputStream();
                             os2.write(input2.getBytes());
                             os2.flush();
